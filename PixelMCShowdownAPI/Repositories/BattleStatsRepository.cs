@@ -28,7 +28,6 @@ namespace PixelMCShowdownAPI.Repositories
                 throw new Exception("Winner did not take part");
 
             var participatingPlayers = players.Select(p => _context.Players.First(player => player.UUID.Equals(p)));
-
             BattleStat battleStat = new BattleStat {
                 Players = participatingPlayers.ToList(),
                 Winners = winners.Select(p => participatingPlayers.First(player => player.UUID.Equals(p))).ToList(),

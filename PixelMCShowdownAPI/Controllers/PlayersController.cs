@@ -45,26 +45,16 @@ namespace PixelMCShowdownAPI.Controllers
 
             foreach (var player in players)
             {
-                Guid uuid;
-                bool successfulParse = Guid.TryParse(player.UUID, out uuid);
+                if ((await _playerRepository.GetPlayer(player.UUID)) is null)
+                    continue;
 
-                if (!successfulParse)
-                    return BadRequest("Invalid UUID: " + player.UUID + " for " + player.PlayerName);
-
-                try
+                Player p = await _playerRepository.AddPlayer(player.UUID, player.PlayerName);
+                toReturn.Add(new MinecraftPlayer
                 {
-                    Player p = await _playerRepository.AddPlayer(uuid, player.PlayerName);
-                    toReturn.Add(new MinecraftPlayer
-                    {
-                        Rank = 0,
-                        Score = p.ELORating,
-                        UUID = p.UUID
-                    });
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.StackTrace);
-                }
+                    Rank = 0,
+                    Score = p.ELORating,
+                    UUID = p.UUID
+                });
             }
 
             return Ok(toReturn);
