@@ -2,6 +2,7 @@
 using PixelMCShowdownAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
+using static PixelMCShowdownAPI.Models.dto.PostBattleStat;
 
 namespace PixelMCShowdownAPI.Repositories
 {
@@ -31,6 +32,25 @@ namespace PixelMCShowdownAPI.Repositories
             BattleStat battleStat = new BattleStat {
                 Players = participatingPlayers.ToList(),
                 Winners = winners.Select(p => participatingPlayers.First(player => player.UUID.Equals(p))).ToList(),
+                CreatedDateTime = DateTime.Now,
+            };
+
+            _context.BattleStats.Add(battleStat);
+            await _context.SaveChangesAsync();
+
+            return battleStat;
+        }
+
+        public async Task<BattleStat> PostBattleStat(IEnumerable<PostBattleStatParticipant> participants)
+        {
+            if (participants.Any(player => _context.Players.FirstOrDefault(p => p.UUID == player.UUID) == null))
+                throw new Exception("Null player");
+
+            var participatingPlayers = participants.Select(p => _context.Players.First(player => player.UUID.Equals(p.UUID)));
+            BattleStat battleStat = new BattleStat
+            {
+                Players = participatingPlayers.ToList(),
+                Winners = participants.Where(pp => pp.battleOutcome == Enum.BattleOutcome.WIN).Select(p => _context.Players.First(player => player.UUID.Equals(p.UUID))).ToList(),
                 CreatedDateTime = DateTime.Now,
             };
 

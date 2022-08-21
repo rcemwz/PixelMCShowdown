@@ -40,19 +40,22 @@ namespace PixelMCShowdownAPI.Controllers
 
         // POST api/<BattleStatsController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] BattleStatRequest battleStatRequest)
+        public async Task<IActionResult> Post([FromBody] PostBattleStat battleStatRequest)
         {
-            BattleStat? battlestat = await _battleStatsRepository.PostBattleStat(battleStatRequest.Players, battleStatRequest.Winners);
-            IEnumerable<Player>? players = await _playerRepository.GetPlayers(battleStatRequest.Players);
+            BattleStat? battlestat = await _battleStatsRepository.PostBattleStat(battleStatRequest.Participants);
+            IEnumerable<Player>? players = await _playerRepository.GetPlayers(battleStatRequest.Participants.Select(p => p.UUID));
 
             var eloMatch = new ELO.ELOMatch(_appSettings.ELO.KFactor);
             foreach(var player in players)
             {
-                if (battleStatRequest.Winners.Contains(player.UUID))
-                    eloMatch.AddPlayer(player.UUID.ToString(), 1, player.ELORating);
-                else
-                    eloMatch.AddPlayer(player.UUID.ToString(), 2, player.ELORating);
+                eloMatch.AddPlayer(
+                    player.UUID.ToString(), 
+                    battleStatRequest.Participants.First(x => x.UUID == player.UUID).battleOutcome == Enum.BattleOutcome.WIN ? 1 : 2, 
+                    player.ELORating
+                );
+
             }
+
             eloMatch.CalculateELOs();
             
             foreach(var player in players)
