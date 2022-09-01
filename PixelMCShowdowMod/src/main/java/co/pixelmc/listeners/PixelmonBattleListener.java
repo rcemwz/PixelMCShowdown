@@ -44,6 +44,8 @@ public class PixelmonBattleListener {
             PixelMCShowdown.getLogger().error(e.getStackTrace());
             return;
         }
+
+        PixelMCShowdown.getLogger().info(response.message());
     }
 
     public Response postToApi(List<Map<String, Object>> players) throws IOException {
@@ -52,7 +54,7 @@ public class PixelmonBattleListener {
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://90.192.123.92:5212")
+                .url("http://localhost:89")
                 .method("POST", RequestBody.create(postBody.getBytes()))
                 .build();
 

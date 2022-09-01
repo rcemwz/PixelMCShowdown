@@ -45,7 +45,7 @@ namespace PixelMCShowdownAPI.Controllers
 
             foreach (var player in players)
             {
-                if ((await _playerRepository.GetPlayer(player.UUID)) is null)
+                if ((await _playerRepository.GetPlayer(player.UUID)) != null)
                     continue;
 
                 Player p = await _playerRepository.AddPlayer(player.UUID, player.PlayerName);

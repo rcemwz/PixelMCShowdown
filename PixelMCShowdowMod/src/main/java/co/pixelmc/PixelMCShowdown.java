@@ -1,5 +1,9 @@
 package co.pixelmc;
 
+import co.pixelmc.config.ConfigLoader;
+import co.pixelmc.config.PixelMCConfig;
+import co.pixelmc.listeners.PixelmonBattleListener;
+import com.pixelmonmod.pixelmon.Pixelmon;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +25,7 @@ import java.util.stream.Collectors;
 @Mod("pixelmcshowdown")
 public class PixelMCShowdown {
     private static final Logger LOGGER = LogManager.getLogger();
+    private PixelMCConfig pixelMCConfig;
     private static PixelMCShowdown _instance;
 
     public PixelMCShowdown() {
@@ -37,6 +42,7 @@ public class PixelMCShowdown {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        Pixelmon.EVENT_BUS.register(new PixelmonBattleListener());
     }
 
     public static PixelMCShowdown getInstance() {
@@ -45,14 +51,22 @@ public class PixelMCShowdown {
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+        /*try {
+            ConfigLoader configLoader = new ConfigLoader.ConfigLoaderBuilder()
+                    .usingName("pixelmcshowdown.json")
+                    .usingDefaultConfig("/config/config.json")
+                    .ofDirectory("config/pixelmcshowdown")
+                    .build();
+
+            configLoader.load();
+            this.pixelMCConfig = configLoader.get();
+        } catch (Exception e){
+            e.printStackTrace();
+        }*/
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -88,5 +102,9 @@ public class PixelMCShowdown {
 
     public static Logger getLogger() {
         return LOGGER;
+    }
+
+    public PixelMCConfig getPixelMCConfig() {
+        return pixelMCConfig;
     }
 }
