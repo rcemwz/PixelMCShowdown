@@ -50,6 +50,7 @@ jobs:
           path:  ./drop 
 
 workflows:
+    version: 2
     build:
       jobs:
         - build
