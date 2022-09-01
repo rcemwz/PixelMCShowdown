@@ -3,17 +3,13 @@ jobs:
   build:
     working_directory: ~/app/PixelMCShowdownAPI
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: mcr.microsoft.com/dotnet/sdk:6.0
     environment:
       APP_NAME: "pixelmcshowdownapi"
     steps:
       - checkout:
           path: ~/app
       - setup_remote_docker
-      - run:
-          name: Install dependencies
-          command: |
-            dotnet restore
       - restore_cache:
           keys:
             - v1-{{ .Branch }}
