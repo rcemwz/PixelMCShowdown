@@ -3,13 +3,16 @@ jobs:
   build:
     working_directory: ~/app/PixelMCShowdownAPI
     docker:
-      - image: mcr.microsoft.com/dotnet/sdk:6.0
+      - image: mcr.microsoft.com/dotnet/sdk:6.0.400-1-alpine3.16-amd64
     environment:
       APP_NAME: "pixelmcshowdownapi"
     steps:
       - checkout:
           path: ~/app
       - setup_remote_docker
+      - run:
+          name: Install docker
+          command: apk add docker-cli
       - restore_cache:
           keys:
             - v1-{{ .Branch }}
