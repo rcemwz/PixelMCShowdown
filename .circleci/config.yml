@@ -55,6 +55,9 @@ jobs:
       - checkout:
           path: ~/app
       - run:
+          name: delete me
+          command: ls -l 
+      - run:
           name: Gradle Build
           command: gradle shadowJar
       - store_artifacts:
