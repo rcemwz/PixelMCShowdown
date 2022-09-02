@@ -56,16 +56,16 @@ jobs:
           path: ~/app
       - run:
           name: delete me
-          command: ls -l 
-      - run:
-          name: Gradle Build
-          command: gradle shadowJar
-      - store_artifacts:
-          path: ./build/libs
+          command: ls -l ..
+      #- run:
+      #    name: Gradle Build
+      #    command: gradle shadowJar
+      #- store_artifacts:
+      #    path: ./build/libs
 
 workflows:
     version: 2
     build:
       jobs:
-        - api_build
+        #- api_build
         - mod_build
