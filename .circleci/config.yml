@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  api_build:
     working_directory: ~/app/PixelMCShowdownAPI
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:6.0.400-1-alpine3.16-amd64
@@ -47,9 +47,20 @@ jobs:
             docker save "$APP_NAME":latest | gzip > drop/drop.tgz
       - store_artifacts:
           path:  ./drop 
+  mod_build: 
+    working_directory: ~/app/PixelMCShowdownMod
+    docker: 
+      - image:  gradle:jdk11-alpine
+    steps:
+      - run:
+          name: Gradle Build
+          command: gradle shadowJar
+      - store_artifacts:
+          path: ./build/libs
 
 workflows:
     version: 2
     build:
       jobs:
-        - build
+        - api_build
+        - mod_build
