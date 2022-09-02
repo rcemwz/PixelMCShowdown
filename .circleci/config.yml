@@ -48,7 +48,7 @@ jobs:
       - store_artifacts:
           path:  ./drop 
   mod_build: 
-    working_directory: ~/app/PixelMCShowdownMod
+    working_directory: ~/app/PixelMCShowdowMod
     docker: 
       - image:  gradle:jdk11-alpine
     steps:
@@ -57,11 +57,11 @@ jobs:
       - run:
           name: delete me
           command: ls -l ..
-      #- run:
-      #    name: Gradle Build
-      #    command: gradle shadowJar
-      #- store_artifacts:
-      #    path: ./build/libs
+      - run:
+          name: Gradle Build
+          command: gradle shadowJar
+      - store_artifacts:
+          path: ./build/libs
 
 workflows:
     version: 2
