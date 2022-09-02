@@ -52,6 +52,8 @@ jobs:
     docker: 
       - image:  gradle:jdk11-alpine
     steps:
+      - checkout:
+          path: ~/app
       - run:
           name: Gradle Build
           command: gradle shadowJar
