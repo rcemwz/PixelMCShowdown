@@ -3,6 +3,9 @@ package co.pixelmc;
 import co.pixelmc.config.ConfigLoader;
 import co.pixelmc.config.PixelMCConfig;
 import co.pixelmc.listeners.PixelmonBattleListener;
+import co.pixelmc.listeners.PlayerLoginListener;
+import co.pixelmc.services.BattleStatsService;
+import co.pixelmc.services.PlayerService;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -40,9 +43,18 @@ public class PixelMCShowdown {
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+        //todo make it from file
+        PixelMCConfig config = new PixelMCConfig();
+        config.setWebApi("http://localhost:89");
+
+        //services - rewrite for DI
+        PlayerService playerService = new PlayerService(config.getWebApi());
+        BattleStatsService battleStatsService = new BattleStatsService(config.getWebApi());
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        Pixelmon.EVENT_BUS.register(new PixelmonBattleListener());
+        MinecraftForge.EVENT_BUS.register(new PlayerLoginListener(playerService, getLogger()));
+        Pixelmon.EVENT_BUS.register(new PixelmonBattleListener(battleStatsService, getLogger()));
     }
 
     public static PixelMCShowdown getInstance() {

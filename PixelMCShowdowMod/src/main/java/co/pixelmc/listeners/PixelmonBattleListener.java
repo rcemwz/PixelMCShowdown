@@ -1,6 +1,8 @@
 package co.pixelmc.listeners;
 
 import co.pixelmc.PixelMCShowdown;
+import co.pixelmc.models.WebApiPostBattleStat;
+import co.pixelmc.services.BattleStatsService;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,16 +12,26 @@ import com.pixelmonmod.pixelmon.battles.controller.participants.BattleParticipan
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import okhttp3.*;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
 
 public class PixelmonBattleListener {
+
+    private final BattleStatsService battleStatsService;
+    private final Logger logger;
+
+    public PixelmonBattleListener(BattleStatsService battleStatsService, Logger logger){
+        this.battleStatsService = battleStatsService;
+        this.logger = logger;
+    }
+
     public void onBattleCompleted(BattleEndEvent battleEndEvent){
         if (battleEndEvent.abnormal)
             return;
 
-        List<Map<String, Object>> postPlayers = new ArrayList<>();
+        List<WebApiPostBattleStat> postBattleStats = new ArrayList<>();
 
         ImmutableMap<BattleParticipant, BattleResults> results = battleEndEvent.results;
         for (Map.Entry<BattleParticipant, BattleResults> x : results.entrySet()){
@@ -30,36 +42,18 @@ public class PixelmonBattleListener {
             ServerPlayerEntity player = (ServerPlayerEntity) battlePartEntity;
             BattleResults battleResult = x.getValue();
 
-            Map<String, Object> postPlayer = new HashMap<>();
-            postPlayer.put("uuid", player.getUUID().toString());
-            postPlayer.put("battleOutcome", battleResult == BattleResults.VICTORY ? 1 : 0);
+            WebApiPostBattleStat battleStat = new WebApiPostBattleStat();
+            battleStat.setBattleOutcome(battleResult == BattleResults.VICTORY ? 1 : 0);
+            battleStat.setUuid(player.getUUID());
 
-            postPlayers.add(postPlayer);
+            postBattleStats.add(battleStat);
         }
 
-        Response response;
         try {
-            response = postToApi(postPlayers);
+            battleStatsService.addBattleOutcome(postBattleStats);
+            logger.info("logged: battle stats successfully");
         } catch (IOException e) {
-            PixelMCShowdown.getLogger().error(e.getStackTrace());
-            return;
-        }
-
-        PixelMCShowdown.getLogger().info(response.message());
-    }
-
-    public Response postToApi(List<Map<String, Object>> players) throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String postBody = gson.toJson(players);
-
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("http://localhost:89")
-                .method("POST", RequestBody.create(postBody.getBytes()))
-                .build();
-
-        try (Response response = okHttpClient.newCall(request).execute()) {
-            return response;
+            logger.error(e.getStackTrace());
         }
     }
 }

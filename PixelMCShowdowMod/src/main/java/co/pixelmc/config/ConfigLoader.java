@@ -20,6 +20,7 @@ public class ConfigLoader {
 
         public ConfigLoaderBuilder ofDirectory(String directory) throws IOException {
             Files.createDirectories(Paths.get(directory));
+            configPath = directory;
             return this;
         }
 

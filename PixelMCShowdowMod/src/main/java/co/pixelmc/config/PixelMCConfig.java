@@ -1,13 +1,13 @@
 package co.pixelmc.config;
 
 public class PixelMCConfig {
-    private String restApi;
+    private String webApi;
 
-    public void setRestApi(String restApi) {
-        this.restApi = restApi;
+    public String getWebApi() {
+        return webApi;
     }
 
-    public String getRestApi() {
-        return restApi;
+    public void setWebApi(String webApi) {
+        this.webApi = webApi;
     }
 }
