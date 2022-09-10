@@ -9,5 +9,6 @@
     public class ELOConfig { 
         public int KFactor { get; set; }
         public int PointsPerRank { get; set; }
+        public int ChangeCap { get; set; }
     }
 }

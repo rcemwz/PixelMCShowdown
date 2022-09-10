@@ -16,10 +16,12 @@ namespace PixelMCShowdownAPI.ELO
     {
         private List<ELOPlayer> players = new List<ELOPlayer>();
         private float _kFactor;
+        private int _eloCap;
 
-        public ELOMatch(float K)
+        public ELOMatch(float K, int eloCap)
         {
             this._kFactor = K;
+            this._eloCap = eloCap;
         }
 
         public void AddPlayer(string name, int place, int elo)
@@ -84,7 +86,12 @@ namespace PixelMCShowdownAPI.ELO
 
                         //calculate ELO change vs this one opponent, add it to our change bucket
                         //I currently round at this point, this keeps rounding changes symetrical between EA and EB, but changes K more than it should
-                        players[i].eloChange += (int)Math.Round(K * (S - EA));
+                        int eloChange = (int)Math.Round(K * (S - EA));
+                        if (eloChange > this._eloCap)
+                            eloChange = this._eloCap;
+                        else if (eloChange < (-this._eloCap))
+                            eloChange = -this._eloCap;
+                        players[i].eloChange += eloChange;
                     }
                 }
                 //add accumulated change to initial ELO for final ELO   

@@ -15,11 +15,13 @@ namespace PixelMCShowdownAPI.Controllers
     public class PlayersController : ControllerBase
     {
         private readonly IPlayerRepository _playerRepository;
+        private readonly IBattleStatsRepository _battleStatsRepository;
         private readonly AppSettings _appSettings;
 
-        public PlayersController(IPlayerRepository playerRepository, IOptions<AppSettings> appSettings)
+        public PlayersController(IPlayerRepository playerRepository, IBattleStatsRepository battleStatsRepository, IOptions<AppSettings> appSettings)
         {
             this._playerRepository = playerRepository;
+            this._battleStatsRepository = battleStatsRepository;
             this._appSettings = appSettings.Value;
         }
 
@@ -35,6 +37,17 @@ namespace PixelMCShowdownAPI.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             return Ok(await _playerRepository.GetPlayer(id));
+        }
+
+        // GET api/Players/{id}/BattleStats
+        [HttpGet("{id}/BattleStats")]
+        public async Task<IActionResult> GetBattleStats(Guid id)
+        {
+            var player = await _playerRepository.GetPlayer(id);
+            if (player == null)
+                return NotFound();
+
+            return Ok(await _battleStatsRepository.GetBattleStats(player.UUID));
         }
 
         // POST api/<PlayersController>

@@ -15,39 +15,6 @@ namespace PixelMCShowdownAPI.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*
-            modelBuilder.Entity<BattleStatPlayer>()
-                .HasKey(bsp => new { bsp.PlayerId, bsp.BattleStatId });
-            
-            modelBuilder.Entity<BattleStatPlayer>()
-                .HasOne(bsp => bsp.Player)
-                .WithMany(player => player.BattleStatPlayers)
-                .HasForeignKey(bsp => bsp.BattleStatId);
-
-            modelBuilder.Entity<BattleStatPlayer>()
-                .HasOne(bsp => bsp.BattleStat)
-                .WithMany(bs => bs.BattleStatPlayers)
-                .HasForeignKey(bsp => bsp.BattleStatId);
-
-
-            modelBuilder.Entity<BattleStatWinner>()
-                .HasKey(bsp => new { bsp.PlayerId, bsp.BattleStatId });
-
-            modelBuilder.Entity<BattleStatWinner>()
-                .HasOne(bsp => bsp.Winner)
-                .WithMany(player => player.BattleStatWinners)
-                .HasForeignKey(bsp => bsp.BattleStatId);
-
-            modelBuilder.Entity<BattleStatWinner>()
-                .HasOne(bsp => bsp.BattleStat)
-                .WithMany(bs => bs.BattleStatWinners)
-                .HasForeignKey(bsp => bsp.BattleStatId);
-
-            modelBuilder.Entity<BattleStat>()
-                .Navigation(bs => bs.Players)
-                .UsePropertyAccessMode(PropertyAccessMode.)
-            */
-
             modelBuilder.Entity<Player>()
                 .HasIndex(p => p.UUID)
                 .IsUnique();

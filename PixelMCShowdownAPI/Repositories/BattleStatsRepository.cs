@@ -17,7 +17,14 @@ namespace PixelMCShowdownAPI.Repositories
 
         public async Task<IEnumerable<BattleStat>> GetBattleStats(params Guid[] uuids)
         {
-            throw new NotImplementedException();
+            return _context.BattleStats
+                .Where(bs => 
+                    bs.Players.Any(player => 
+                        uuids.Any(u => 
+                            u.Equals(player.UUID)
+                            )
+                        )
+                    );
         }
 
         public async Task<BattleStat> PostBattleStat(IEnumerable<Guid> players, IEnumerable<Guid> winners)

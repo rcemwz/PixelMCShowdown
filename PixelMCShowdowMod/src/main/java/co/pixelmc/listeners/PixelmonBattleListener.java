@@ -11,6 +11,7 @@ import com.pixelmonmod.pixelmon.api.events.battles.BattleEndEvent;
 import com.pixelmonmod.pixelmon.battles.controller.participants.BattleParticipant;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import okhttp3.*;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +28,7 @@ public class PixelmonBattleListener {
         this.logger = logger;
     }
 
+    @SubscribeEvent
     public void onBattleCompleted(BattleEndEvent battleEndEvent){
         if (battleEndEvent.abnormal)
             return;
@@ -51,7 +53,7 @@ public class PixelmonBattleListener {
 
         try {
             battleStatsService.addBattleOutcome(postBattleStats);
-            logger.info("logged: battle stats successfully");
+            logger.info("logged battle stats successfully");
         } catch (IOException e) {
             logger.error(e.getStackTrace());
         }

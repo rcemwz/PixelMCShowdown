@@ -13,7 +13,7 @@ namespace PixelMCShowdownAPI.Models
         public int ELORating { get; set; }
         public DateTime CreatedDateTime { get; set; }
 
-        public ICollection<BattleStat> BattleStats { get; set; }
-        public ICollection<BattleStat> WonBattleStats { get; set; }
+        public virtual ICollection<BattleStat> BattleStats { get; set; }
+        public virtual ICollection<BattleStat> WonBattleStats { get; set; }
     }
 }

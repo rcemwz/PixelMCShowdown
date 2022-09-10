@@ -4,6 +4,7 @@ using PixelMCShowdownAPI.Models;
 using PixelMCShowdownAPI.Repositories;
 using PixelMCShowdownAPI.Config;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,7 +34,7 @@ namespace PixelMCShowdownAPI.Controllers
 
         // GET api/<BattleStatsController>/5
         [HttpGet("{id}")]
-        public string Get(Guid playerUuid)
+        public string Get(int id)
         {
             return "value";
         }
@@ -45,7 +46,7 @@ namespace PixelMCShowdownAPI.Controllers
             BattleStat? battlestat = await _battleStatsRepository.PostBattleStat(battleStatRequest);
             IEnumerable<Player>? players = await _playerRepository.GetPlayers(battleStatRequest.Select(p => p.UUID));
 
-            var eloMatch = new ELO.ELOMatch(_appSettings.ELO.KFactor);
+            var eloMatch = new ELO.ELOMatch(K: _appSettings.ELO.KFactor, eloCap: _appSettings.ELO.ChangeCap);
             foreach(var player in players)
             {
                 eloMatch.AddPlayer(

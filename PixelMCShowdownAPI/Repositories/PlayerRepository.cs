@@ -1,5 +1,7 @@
 ﻿using PixelMCShowdownAPI.Database;
 using PixelMCShowdownAPI.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace PixelMCShowdownAPI.Repositories
 {
