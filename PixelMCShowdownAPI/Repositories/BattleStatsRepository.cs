@@ -2,6 +2,7 @@
 using PixelMCShowdownAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using static PixelMCShowdownAPI.Models.dto.PostBattleStat;
 
 namespace PixelMCShowdownAPI.Repositories
@@ -15,17 +16,17 @@ namespace PixelMCShowdownAPI.Repositories
             _context = pixelMCShowdownDBcontext;
         }
 
-        public async Task<IEnumerable<BattleStat>> GetBattleStats(params Guid[] uuids)
-        {
-            return _context.BattleStats
-                .Where(bs => 
-                    bs.Players.Any(player => 
-                        uuids.Any(u => 
+        public async Task<IEnumerable<BattleStat>> GetBattleStats(params Guid[] uuids) => _context.BattleStats
+                .Include(bs => bs.Winners)
+                .Include(bs => bs.Players)
+                .AsSplitQuery()
+                .Where(bs =>
+                    bs.Players.Any(player =>
+                        uuids.Any(u =>
                             u.Equals(player.UUID)
                             )
                         )
                     );
-        }
 
         public async Task<BattleStat> PostBattleStat(IEnumerable<Guid> players, IEnumerable<Guid> winners)
         { 

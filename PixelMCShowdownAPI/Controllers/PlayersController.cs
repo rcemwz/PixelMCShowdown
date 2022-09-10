@@ -47,7 +47,17 @@ namespace PixelMCShowdownAPI.Controllers
             if (player == null)
                 return NotFound();
 
-            return Ok(await _battleStatsRepository.GetBattleStats(player.UUID));
+            var battleStats = await _battleStatsRepository.GetBattleStats(player.UUID);
+
+            var toReturn = battleStats.Select(bs => new
+            {
+                Id = bs.Id,
+                CreatedDateTime = bs.CreatedDateTime,
+                Players = bs.Players.Select(p => new { UUID = p.UUID, PlayerName = p.PlayerName }).ToList(),
+                Winners = bs.Winners.Select(p => new { UUID = p.UUID, PlayerName = p.PlayerName }).ToList()
+            });
+
+            return Ok(toReturn);
         }
 
         // POST api/<PlayersController>
