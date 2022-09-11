@@ -38,5 +38,7 @@ namespace PixelMCShowdownAPI.Repositories
 
         public async Task<IEnumerable<Player>> GetPlayers(IEnumerable<Guid> uuids) => _context.Players.Where(p => uuids.Contains(p.UUID)).ToList();
         public async Task<IEnumerable<Player>> GetPlayers() => _context.Players.OrderBy(p => p.CreatedDateTime);
+
+        public async Task<bool> PlayerExists(Guid uuid) => _context.Players.Any(p => p.UUID.Equals(uuid));
     }
 }

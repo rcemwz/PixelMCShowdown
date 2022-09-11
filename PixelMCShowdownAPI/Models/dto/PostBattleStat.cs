@@ -1,4 +1,5 @@
-﻿using PixelMCShowdownAPI.Enum;
+﻿using Microsoft.AspNetCore.Mvc;
+using PixelMCShowdownAPI.Enum;
 
 namespace PixelMCShowdownAPI.Models.dto
 {

@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var sqlConnectionString = builder.Configuration.GetConnectionString("PixelMCShowdownDBContext");
 builder.Services.AddDbContext<PixelMCShowdownDBContext>(options =>
-    options.UseMySql(sqlConnectionString, ServerVersion.AutoDetect(sqlConnectionString)));
+    options.UseMySql(sqlConnectionString,ServerVersion.AutoDetect(sqlConnectionString)));
 
 builder.Services
     .AddControllers()

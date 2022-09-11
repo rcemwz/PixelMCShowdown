@@ -36,7 +36,10 @@ namespace PixelMCShowdownAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            return Ok(await _playerRepository.GetPlayer(id));
+            var player = await _playerRepository.GetPlayer(id);
+            if (player is null)
+                return NotFound();
+            return Ok(player);
         }
 
         // GET api/Players/{id}/BattleStats
@@ -81,6 +84,16 @@ namespace PixelMCShowdownAPI.Controllers
             }
 
             return Ok(toReturn);
+        }
+
+        // GET api/<PlayersController>/5
+        [HttpGet("Validate/Exists/{id}")]
+        public async Task<IActionResult> ValidateUUIDExists(Guid id)
+        {
+            if (await _playerRepository.PlayerExists(id))
+                 return new JsonResult(true);
+
+            return (await _playerRepository.PlayerExists(id)) ? new JsonResult(true) : new JsonResult("UUID " + id + " does not exist in the database.");
         }
     }
 }
