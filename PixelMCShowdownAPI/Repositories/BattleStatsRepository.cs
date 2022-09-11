@@ -51,8 +51,9 @@ namespace PixelMCShowdownAPI.Repositories
 
         public async Task<BattleStat> PostBattleStat(IEnumerable<PostBattleStatParticipant> participants)
         {
-            if (participants.Any(player => _context.Players.FirstOrDefault(p => p.UUID == player.UUID) == null))
-                throw new Exception("Null player");
+            var nullParticipants = participants.Where(player => _context.Players.FirstOrDefault(p => p.UUID == player.UUID) == null);
+            if (nullParticipants.Count() > 0)
+                throw new Exception("Null player(s): " + String.Join(", ", nullParticipants.Select(p => p.UUID.ToString()).ToArray()));
 
             var participatingPlayers = participants.Select(p => _context.Players.First(player => player.UUID.Equals(p.UUID)));
             BattleStat battleStat = new BattleStat

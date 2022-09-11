@@ -43,7 +43,15 @@ namespace PixelMCShowdownAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ICollection<PostBattleStat.PostBattleStatParticipant> battleStatRequest)
         {
-            BattleStat? battlestat = await _battleStatsRepository.PostBattleStat(battleStatRequest);
+            BattleStat? battlestat;
+            try
+            {
+                battlestat = await _battleStatsRepository.PostBattleStat(battleStatRequest);
+            } catch (Exception e)
+            {
+                return NotFound();
+            }
+
             IEnumerable<Player>? players = await _playerRepository.GetPlayers(battleStatRequest.Select(p => p.UUID));
 
             var eloMatch = new ELO.ELOMatch(K: _appSettings.ELO.KFactor, eloCap: _appSettings.ELO.ChangeCap);
