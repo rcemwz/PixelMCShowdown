@@ -10,7 +10,7 @@ namespace PixelMCShowdownAPI.Database
 
         public PixelMCShowdownDBContext(DbContextOptions<PixelMCShowdownDBContext> contextOptions) : base(contextOptions)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
