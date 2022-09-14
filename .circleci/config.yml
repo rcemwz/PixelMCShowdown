@@ -1,3 +1,10 @@
+# TODO - exporting a docker image did not quite have the intended behaviour as I hoped so new pipeline should be:
+# Build: 
+#    Build app, publish to zip 
+#    Ammend dockerfile so no building is done
+# Release:
+#    Copy zip to host, run docker build with injected tag 
+
 version: 2
 jobs:
   api_build:
